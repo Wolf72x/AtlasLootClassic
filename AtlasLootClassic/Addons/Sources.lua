@@ -18,31 +18,8 @@ local format = format
 local str_split = string.split
 
 
-local function GetItemIcon(itemID)
-    local _, _, _, _, _, _, _, _, _, icon = GetItemInfo(itemID) 
-	return icon
-end
-local function GetCurrencyInfo(currencyID)
-	-- Emblems & tokens are ITEMS in Wrath
-	if currencyID then
-		local name, _, _, _, _, _, _, _, _, icon = GetItemInfo(currencyID)
-		if name then
-			local count = GetItemCount(currencyID)
-			return {
-				name = name,
-				quantity = count,
-				iconFileID = icon,
-			}
-		end
-	end
-end
 
 
-
-
--- WoW
-local GetCurrencyInfo = GetCurrencyInfo
-local GetItemIcon = GetItemIcon
 
 -- AtlasLoot
 local PRICE_INFO = VendorPrice.GetPriceInfoList()
@@ -128,6 +105,25 @@ Sources.DbDefaults = {
         [16] = false,
     }
 }
+
+local function GetItemIcon(itemID)
+    local _, _, _, _, _, _, _, _, _, icon = GetItemInfo(itemID) 
+	return icon or DUMMY_ICON
+end
+local function GetCurrencyInfo(currencyID)
+	-- Emblems & tokens are ITEMS in Wrath
+	if currencyID then
+		local name, _, _, _, _, _, _, _, _, icon = GetItemInfo(currencyID)
+		if name then
+			local count = GetItemCount(currencyID)
+			return {
+				name = name,
+				quantity = count,
+				iconFileID = icon,
+			}
+		end
+	end
+end
 
 --Sources.GlobalDbDefaults = {}
 local function BuildSource(ini, boss, typ, item, diffID)
